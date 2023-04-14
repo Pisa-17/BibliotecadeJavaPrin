@@ -240,11 +240,14 @@ public class Biblioteca {
         } while (input != 9);
     }
 
-    //// He creado varios caminos para empezar la primera parte de los prestamos, va a ser un metodo largo por lo que requerrira documentarlo bien, asi como el resto (jueves, 13 de abril de 2023)
+    //// He creado varios caminos para empezar la primera parte de los prestamos, va a ser un metodo largo por lo que requerira documentarlo bien, asi como el resto (jueves, 13 de abril de 2023)
     public static void altaprest(){
         System.out.println("****************************");
         System.out.println("* Gestion de prestamos/dev *");
         System.out.println("****************************");
+        existeyregisprest();
+    }
+    public static void existeyregisprest(){
         System.out.println("");
         System.out.println("Indique su dni: ");
         String dniT = sc.nextLine();
@@ -255,13 +258,19 @@ public class Biblioteca {
         for(Usuario usuario : usuarios){
             if(usuario.getDni().equals(dniT)){
                 System.out.println("Usuario existente");
-                 for (Libro libro : libros){
-                     if (libro.getIsbn().equals(isbnT)){
-                         System.out.println("Libro existente");
-                     }else{
-                         System.out.println("El isbn indicado no corresponde a ningun libro lo sentimos");
-                     }
-                 }
+                for (Libro libro : libros){
+                    if (libro.getIsbn().equals(isbnT)){
+                        System.out.println("Libro existente");
+                        LocalDate fechaPrestamo = LocalDate.now();
+                        LocalDate fechaDevolucion = fechaPrestamo.plusDays(15);
+                        Usuario usuarioencontrado = usuarios.get(Integer.parseInt(dniT));
+                        Libro libroencontrado = libros.get(Integer.parseInt(isbnT));
+                        Prestamo prestamo = new Prestamo(usuarioencontrado, libroencontrado, fechaPrestamo, fechaDevolucion);
+                        prestamos.add(prestamo);
+                    }else{
+                        System.out.println("El isbn indicado no corresponde a ningun libro lo sentimos");
+                    }
+                }
             }else{
                 System.out.println("El dni indicado no corresponde a ningun usuario");
             }
