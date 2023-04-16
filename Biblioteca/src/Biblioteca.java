@@ -222,7 +222,7 @@ public class Biblioteca {
                     altaprest();
                     break;
                 case 2:
-                    // devolucion();
+                    prestdevolucion();
                     break;
                 case 3:
                     // prorrogas();
@@ -259,15 +259,18 @@ public class Biblioteca {
             if(usuario.getDni().equals(dniT)){
                 System.out.println("Usuario existente");
                 for (Libro libro : libros){
-                    if (libro.getIsbn().equals(isbnT)){
-                        System.out.println("Libro existente");
-                        LocalDate fechaPrestamo = LocalDate.now();
-                        LocalDate fechaDevolucion = fechaPrestamo.plusDays(15);
-                        Usuario usuarioencontrado = usuarios.get(Integer.parseInt(dniT));
-                        Libro libroencontrado = libros.get(Integer.parseInt(isbnT));
-                        Prestamo prestamo = new Prestamo(usuarioencontrado, libroencontrado, fechaPrestamo, fechaDevolucion);
-                        prestamos.add(prestamo);
-                    }else{
+                    if (libro.getIsbn().equals(isbnT) && libro.getUnidades() > 0){
+                        if (!existePrestamoActivo(usuario, libro)) {
+                            System.out.println("Libro existente");
+                            LocalDate fechaPrestamo = LocalDate.now();
+                            LocalDate fechaDevolucion = fechaPrestamo.plusDays(15);
+                            Usuario usuarioencontrado = usuarios.get(Integer.parseInt(dniT));
+                            Libro libroencontrado = libros.get(Integer.parseInt(isbnT));
+                            Prestamo prestamo = new Prestamo(usuarioencontrado, libroencontrado, fechaPrestamo, fechaDevolucion);
+                            prestamos.add(prestamo);
+                            libroencontrado.setUnidades(libroencontrado.getUnidades() - 1);
+                        }
+                        }else{
                         System.out.println("El isbn indicado no corresponde a ningun libro lo sentimos");
                     }
                 }
@@ -276,7 +279,39 @@ public class Biblioteca {
             }
         }
     }
+    private static boolean existePrestamoActivo(Usuario usuario, Libro libro) {
+        for (Prestamo prestamo : prestamos) {
+            if (prestamo.getUsuarioPrest().equals(usuario) && prestamo.getLibroPrest().equals(libro)
+                    && prestamo.getFechaDev().isAfter(LocalDate.now())) {
+                return true; // El usuario ya tiene un préstamo activo de este libro
+            }
+        }
+        return false; // El usuario no tiene un préstamo activo de este libro
+    }
+    public static void prestdevolucion() {
+        System.out.println("");
+        System.out.println("Indique su dni: ");
+        String dniT = sc.nextLine();
+        System.out.println("Indique el isbn del libro devuelto: ");
+        String isbnT = sc.nextLine();
+        Prestamo prestamoEncontrado = null;
 
+        for (Prestamo prestamo : prestamos) {
+            if (prestamo.getUsuarioPrest().getDni().equals(dniT) && prestamo.getLibroPrest().getIsbn().equals(isbnT)) {
+                prestamoEncontrado = prestamo;
+                break;
+            }
+        }
+
+        if (prestamoEncontrado != null) {
+            prestamos.remove(prestamoEncontrado);
+            Libro libroDevuelto = prestamoEncontrado.getLibroPrest();
+            libroDevuelto.setUnidades(libroDevuelto.getUnidades() + 1);
+            System.out.println("Devolución registrada de manera exitosa.");
+        } else {
+            System.out.println("No se encontró un préstamo activo con el DNI y el ISBN proporcionados.");
+        }
+    }
 
     public void cargadatos(){
 
