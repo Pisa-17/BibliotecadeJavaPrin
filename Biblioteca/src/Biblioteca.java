@@ -5,9 +5,9 @@ public class Biblioteca {
 
     static Scanner sc = new Scanner(System.in);
 
-    private static ArrayList<Prestamo> prestamos;
-    private static ArrayList<Libro> libros;
-    private static ArrayList<Usuario> usuarios;
+    private static ArrayList<Prestamo> prestamos = new ArrayList<>();
+    private static ArrayList<Libro> libros = new ArrayList<>();
+    private static ArrayList<Usuario> usuarios = new ArrayList<>();
 
 
     public void menu() {
@@ -31,7 +31,7 @@ public class Biblioteca {
                     gestionLibros();
                     break;
                 case 3:
-                    // se va al metodo de gestion de prestamos/devoluciones
+                    gestionPrestamos();
                     break;
             }
         } while (input != 9);
@@ -67,6 +67,7 @@ public class Biblioteca {
         System.out.println("*   Gestion de usuarios    *");
         System.out.println("****************************");
         System.out.println("");
+        limpiabuffer();
         System.out.println("Indique su dni: ");
         String dniT = sc.nextLine();
         System.out.println("Indique su nombre: ");
@@ -80,6 +81,7 @@ public class Biblioteca {
         System.out.println("*   Gestion de usuarios    *");
         System.out.println("****************************");
         System.out.println("");
+        limpiabuffer();
         System.out.println("Indique su dni: ");
         String dniT = sc.nextLine();
         Usuario usuarioAEliminar = null;
@@ -138,14 +140,14 @@ public class Biblioteca {
         System.out.println("****************************");
         System.out.println("*     Gestion de libros    *");
         System.out.println("****************************");
-        System.out.println("");
+        limpiabuffer();
         System.out.println("Indique el codigo isbn del libro: ");
         String isbnT = sc.nextLine();
         System.out.println("Indique el titulo del libro: ");
         String tituloT = sc.nextLine();
         System.out.println("Indique el autor del libro: ");
         String autorT = sc.nextLine();
-        System.out.println("Indique el autor del libro: ");
+        System.out.println("Indique las unidades del libro: ");
         int unidadesT = sc.nextInt();
         libros.add(new Libro(isbnT, tituloT, autorT, unidadesT));
     }
@@ -154,6 +156,7 @@ public class Biblioteca {
         System.out.println("*     Gestion de libros    *");
         System.out.println("****************************");
         System.out.println("");
+        limpiabuffer();
         System.out.println("Indique su isbn: ");
         String isbnT = sc.nextLine();
         Libro libroAEliminar = null;
@@ -176,6 +179,7 @@ public class Biblioteca {
         System.out.println("*     Gestion de libros    *");
         System.out.println("****************************");
         System.out.println("");
+        limpiabuffer();
         System.out.println("Indique el isbn del libro a modificar: ");
         String isbnT = sc.nextLine();
 
@@ -191,7 +195,7 @@ public class Biblioteca {
             System.out.println("Indica el numero de unidades que quieres que tenga el libro: ");
             int nuevasUnidades = Integer.parseInt(sc.nextLine());
             libroAModificar.setUnidades(nuevasUnidades);
-            System.out.println("Numero de unidades del libro con isbn " + isbnT + "modificado");
+            System.out.println("Numero de unidades del libro con isbn " + isbnT + " modificado");
         }else{
             System.out.println("Libro no encontrado");
         }
@@ -228,10 +232,10 @@ public class Biblioteca {
                     // prorrogas();
                     break;
                 case 4:
-                    // listaprest();
+                    listaprest();
                     break;
                 case 5:
-                    // librosenprest();
+                    mostrarPrestamosPorDNI();
                     break;
                 case 6:
                     // usertiene();
@@ -249,6 +253,7 @@ public class Biblioteca {
     }
     public static void existeyregisprest(){
         System.out.println("");
+        limpiabuffer();
         System.out.println("Indique su dni: ");
         String dniT = sc.nextLine();
         System.out.println("Indique el isbn del libro: ");
@@ -312,7 +317,33 @@ public class Biblioteca {
             System.out.println("No se encontró un préstamo activo con el DNI y el ISBN proporcionados.");
         }
     }
+    public static void listaprest(){
+        for(Prestamo prestamo : prestamos){
+            System.out.println(prestamo.toString());
+        }
+    }
+    public static void mostrarPrestamosPorDNI() {
+        System.out.println("");
+        System.out.println("Indique su dni: ");
+        String dniT = sc.nextLine();
+        boolean encontrado = false;
 
+        for (Prestamo prestamo : prestamos) {
+            if (prestamo.getUsuarioPrest().getDni().equals(dniT)) {
+                System.out.println(prestamo);
+                System.out.println("--------------");
+                encontrado = true;
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("No se encontraron préstamos para el DNI proporcionado.");
+        }
+    }
+
+    public static void limpiabuffer(){
+        sc.nextLine();
+    }
     public void cargadatos(){
 
         libros.add(new Libro("1-11","El Hobbit","JRR Tolkien",3));
