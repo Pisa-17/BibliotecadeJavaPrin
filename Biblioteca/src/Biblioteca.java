@@ -573,6 +573,7 @@ public class Biblioteca {
      */
     public static void mostrarPrestamosPorDNI() {
         imprimirTitulogestionPrest();
+        limpiabuffer();
         System.out.println("Indique su dni: ");
         String dniT = sc.nextLine();
         boolean encontrado = false;
@@ -602,6 +603,7 @@ public class Biblioteca {
      */
     public static void mostrarPrestamosPorISBN() {
         imprimirTitulogestionPrest();
+        limpiabuffer();
         System.out.println("Indique el isbn del libro: ");
         String isbnT = sc.nextLine();
         boolean encontrado = false;
