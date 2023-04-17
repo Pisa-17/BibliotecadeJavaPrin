@@ -216,8 +216,8 @@ public class Biblioteca {
             System.out.println("2 - Devoluciones");
             System.out.println("3 - Prorrogas");
             System.out.println("4 - Listado de prestamos (TODOS)");
-            System.out.println("5 - Libros en prestamo (USUARIO)");
-            System.out.println("6 - Usuarios lo tienen (LIBRO)");
+            System.out.println("5 - Libros en prestamo por el usuario (USUARIO)");
+            System.out.println("6 - Usuarios que tienen el libro en prestamo (LIBRO)");
             System.out.println("9 - Volver");
 
             input = sc.nextInt();
@@ -238,7 +238,7 @@ public class Biblioteca {
                     mostrarPrestamosPorDNI();
                     break;
                 case 6:
-                    // usertiene();
+                    mostrarPrestamosPorISBN();
                     break;
             }
         } while (input != 9);
@@ -317,6 +317,28 @@ public class Biblioteca {
             System.out.println("No se encontró un préstamo activo con el DNI y el ISBN proporcionados.");
         }
     }
+    public static void prestprorroga() {
+        System.out.println("");
+        System.out.println("Indique su dni: ");
+        String dniT = sc.nextLine();
+        System.out.println("Indique el isbn del libro devuelto: ");
+        String isbnT = sc.nextLine();
+        Prestamo prestamoEncontrado = null;
+
+        for (Prestamo prestamo : prestamos) {
+            if (prestamo.getUsuarioPrest().getDni().equals(dniT) && prestamo.getLibroPrest().getIsbn().equals(isbnT)) {
+                prestamoEncontrado = prestamo;
+                break;
+            }
+        }
+        if (prestamoEncontrado != null) {
+            Prestamo prorroga = null;
+            prorroga.setFechaDev(prorroga.getFechaDev() + 15);
+            System.out.println("Prorroga registrada de manera exitosa.");
+        } else {
+            System.out.println("No se encontró un préstamo activo con el DNI y el ISBN proporcionados.");
+        }
+    }
     public static void listaprest(){
         for(Prestamo prestamo : prestamos){
             System.out.println(prestamo.toString());
@@ -338,6 +360,24 @@ public class Biblioteca {
 
         if (!encontrado) {
             System.out.println("No se encontraron préstamos para el DNI proporcionado.");
+        }
+    }
+    public static void mostrarPrestamosPorISBN() {
+        System.out.println("");
+        System.out.println("Indique el isbn del libro: ");
+        String isbnT = sc.nextLine();
+        boolean encontrado = false;
+
+        for (Prestamo prestamo : prestamos) {
+            if (prestamo.getLibroPrest().getIsbn().equals(isbnT)) {
+                System.out.println(prestamo);
+                System.out.println("--------------");
+                encontrado = true;
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("No se encontraron préstamos para el ISBN proporcionado.");
         }
     }
 
